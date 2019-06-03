@@ -11,9 +11,9 @@ namespace AttacherCommon
         TextToClients = 1,
         TextToServers = 2,
         ClientStatus = 3,
-        StartAttach = 4,
-        StopAttach = 5,
+        StartAttack = 4,
+        StopAttack = 5,
         ClientError = 6,
-        ClientAttaching = 7
+        ClientAttacking = 7
     }
 }

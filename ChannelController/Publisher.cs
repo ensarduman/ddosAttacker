@@ -10,15 +10,12 @@ namespace ChannelController
 {
     public class Publisher : ChannelControllerBase
     {
-        public void PublishTextMessage(MessageDTO message)
+        public void PublishMessage(MessageDTO message)
         {
             var res = pubnub.Publish()
                 .Channel(channel)
                 .Message(message)
                 .Sync();
         }
-
-
-
     }
 }

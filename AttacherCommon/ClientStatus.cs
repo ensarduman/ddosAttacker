@@ -12,6 +12,6 @@ namespace AttacherCommon
         Message,
         Error,
         NotResponding,
-        Attaching
+        Attacking
     }
 }

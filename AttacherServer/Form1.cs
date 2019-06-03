@@ -120,7 +120,7 @@ namespace AttacherServer
                         newRow.BackColor = Color.Orange;
                         newRow.ForeColor = lvClients.ForeColor;
                         break;
-                    case ClientStatusType.Attaching:
+                    case ClientStatusType.Attacking:
                         newRow.BackColor = Color.Green;
                         newRow.ForeColor = Color.White;
                         break;
@@ -147,8 +147,8 @@ namespace AttacherServer
                 case MessageType.ClientError:
                     clientStatusType = ClientStatusType.Error;
                     break;
-                case MessageType.ClientAttaching:
-                    clientStatusType = ClientStatusType.Attaching;
+                case MessageType.ClientAttacking:
+                    clientStatusType = ClientStatusType.Attacking;
                     break;
                 default:
                     clientStatusType = ClientStatusType.Normal;

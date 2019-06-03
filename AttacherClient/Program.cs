@@ -5,34 +5,111 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Timers;
 
 namespace AttacherClient
 {
     class Program
     {
         static string SenderId;
+        static ClientStatusType Status;
+        static string Data;
+        const int SendStatusMessageInterval = 3000;
 
         static void Main(string[] args)
         {
             SenderId = Identity.CreateNewID();
+            Status = ClientStatusType.Normal;
 
+            Listener listener = new Listener();
+            listener.AddListener(message => {
+                HandleMessage(message);
+                return true;
+            });
+
+            //Sunucuya durum bilgisi gönderilmesi için bir timer yaratılıyor
+            Timer timer = new Timer();
+            timer.Elapsed += PublishStatusMessage;
+            timer.Interval = SendStatusMessageInterval;
+            timer.Start();
+
+            Console.ReadLine();
+        }
+
+        private static void PublishStatusMessage(object sender, ElapsedEventArgs e)
+        {
             Publisher publisher = new Publisher();
-            publisher.PublishTextMessage(new MessageDTO(MessageType.ClientStatus, SenderId, "Active"));
+            MessageType messageType;
 
-            Thread.Sleep(3000);
+            switch (Status)
+            {
+                case ClientStatusType.Normal:
+                    messageType = MessageType.ClientStatus;
+                    break;
+                case ClientStatusType.Message:
+                    messageType = MessageType.TextToServers;
+                    break;
+                case ClientStatusType.Error:
+                    messageType = MessageType.ClientError;
+                    break;
+                case ClientStatusType.Attacking:
+                    messageType = MessageType.ClientAttacking;
+                    break;
+                default:
+                    messageType = MessageType.ClientStatus;
+                    break;
+            }
 
-            publisher.PublishTextMessage(new MessageDTO(MessageType.TextToServers, SenderId, "Mesajım Var :)"));
+            publisher.PublishMessage(new MessageDTO(messageType, SenderId, Data));
+        }
 
-            Thread.Sleep(3000);
+        private static void HandleMessage(MessageDTO message)
+        {
+            switch (message.MessageType)
+            {
+                case MessageType.TextToClients:
+                    Console.WriteLine(message.Data);
+                    break;
+                case MessageType.StartAttack:
+                    StartAttack(message.Data);
+                    break;
+                case MessageType.StopAttack:
+                    StopAttack();
+                    break;
+                default:
+                    break;
+            }
+        }
 
-            publisher.PublishTextMessage(new MessageDTO(MessageType.ClientError, SenderId, "Bir hata oluştu!"));
+        /// <summary>
+        /// Saldırıyı başlatır
+        /// </summary>
+        /// <param name="url"></param>
+        private static void StartAttack(string url)
+        {
+            Status = ClientStatusType.Attacking;
+            Data = url;
+            WriteMessage("Attacking started to " + url);
+        }
 
-            Thread.Sleep(3000);
+        /// <summary>
+        /// Saldırıyı durdurur
+        /// </summary>
+        /// <param name="url"></param>
+        private static void StopAttack()
+        {
+            Status = ClientStatusType.Normal;
+            Data = String.Empty;
+            WriteMessage("Attacking stopped");
+        }
 
-            publisher.PublishTextMessage(new MessageDTO(MessageType.ClientAttaching, SenderId, "Saldırılıyor"));
-
+        /// <summary>
+        /// Ekrana mesajı yazar
+        /// </summary>
+        /// <param name="message"></param>
+        private static void WriteMessage(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }
