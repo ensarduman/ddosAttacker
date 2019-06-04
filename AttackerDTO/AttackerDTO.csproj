@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8DC48FCA-E00F-4380-A587-C5BAE39A00F8}</ProjectGuid>
+    <ProjectGuid>{5FA09495-BE1E-4D04-8668-9F941C9EBDE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChannelController</RootNamespace>
-    <AssemblyName>ChannelController</AssemblyName>
+    <RootNamespace>AtacherDTO</RootNamespace>
+    <AssemblyName>AtacherDTO</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,14 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.2\lib\net4\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Pubnub, Version=4.0.30.0, Culture=neutral, PublicKeyToken=dc66f52ce6619f44, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pubnub.4.0.30\lib\net461\Pubnub.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,21 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelControllerBase.cs" />
-    <Compile Include="Listener.cs" />
-    <Compile Include="Publisher.cs" />
-    <Compile Include="Sample.cs" />
+    <Compile Include="IDTO.cs" />
+    <Compile Include="MessageDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AttackerDTO\AttackerDTO.csproj">
-      <Project>{5fa09495-be1e-4d04-8668-9f941c9ebde0}</Project>
-      <Name>AttackerDTO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AttackerCommon\AttackerCommon.csproj">
       <Project>{8d34e773-dd3d-445e-8aa8-e40650c2aa18}</Project>
       <Name>AttackerCommon</Name>

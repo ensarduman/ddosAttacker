@@ -23,7 +23,7 @@ namespace ChannelController
             pubnub.Subscribe<string>()
             .Channels(new string[] {
                 // subscribe to channels
-                "attacher"
+                "Attacker"
              })
             .Execute();
 

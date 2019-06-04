@@ -9,7 +9,7 @@ namespace ChannelController
 {
     public abstract class ChannelControllerBase
     {
-        internal string channel = "attacher";
+        internal string channel = "Attacker";
         internal Pubnub pubnub;
 
         public ChannelControllerBase()
