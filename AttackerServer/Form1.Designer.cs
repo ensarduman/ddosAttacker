@@ -32,6 +32,7 @@
             this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lastUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnRefreshClients = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lvClients
@@ -40,9 +41,9 @@
             this.id,
             this.status,
             this.lastUpdate});
-            this.lvClients.Location = new System.Drawing.Point(12, 12);
+            this.lvClients.Location = new System.Drawing.Point(12, 41);
             this.lvClients.Name = "lvClients";
-            this.lvClients.Size = new System.Drawing.Size(517, 214);
+            this.lvClients.Size = new System.Drawing.Size(743, 211);
             this.lvClients.TabIndex = 0;
             this.lvClients.UseCompatibleStateImageBehavior = false;
             this.lvClients.View = System.Windows.Forms.View.Details;
@@ -65,11 +66,22 @@
             this.lastUpdate.Text = "Last Update";
             this.lastUpdate.Width = 148;
             // 
+            // btnRefreshClients
+            // 
+            this.btnRefreshClients.Location = new System.Drawing.Point(12, 12);
+            this.btnRefreshClients.Name = "btnRefreshClients";
+            this.btnRefreshClients.Size = new System.Drawing.Size(75, 23);
+            this.btnRefreshClients.TabIndex = 1;
+            this.btnRefreshClients.Text = "Refresh Clients";
+            this.btnRefreshClients.UseVisualStyleBackColor = true;
+            this.btnRefreshClients.Click += new System.EventHandler(this.BtnRefreshClients_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(541, 238);
+            this.ClientSize = new System.Drawing.Size(767, 264);
+            this.Controls.Add(this.btnRefreshClients);
             this.Controls.Add(this.lvClients);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -84,6 +96,7 @@
         private System.Windows.Forms.ColumnHeader id;
         private System.Windows.Forms.ColumnHeader status;
         private System.Windows.Forms.ColumnHeader lastUpdate;
+        private System.Windows.Forms.Button btnRefreshClients;
     }
 }
 

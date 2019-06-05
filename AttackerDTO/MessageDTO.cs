@@ -15,11 +15,12 @@ namespace AtackerDTO
     {
         public MessageDTO()
         {
-
+            this.MessageId = Identity.CreateNewID();
         }
 
         public MessageDTO(MessageType messageType, string senderId, string data)
         {
+            this.MessageId = Identity.CreateNewID();
             this.MessageType = messageType;
             this.SenderId = senderId;
             this.Data = data;
@@ -31,12 +32,14 @@ namespace AtackerDTO
             {
                 MessageDTO responseObject = JsonConvert.DeserializeObject<MessageDTO>(json);
 
+                this.MessageId = responseObject.MessageId;
                 this.MessageType = responseObject.MessageType;
                 this.SenderId = responseObject.SenderId;
                 this.Data = responseObject.Data;
             }
         }
 
+        public string MessageId { get; private set; }
         public MessageType MessageType { get; set; }
         public string SenderId { get; set; }
         public string Data { get; set; }

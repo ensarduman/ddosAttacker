@@ -14,6 +14,7 @@ namespace AttackerCommon
         StartAttack = 4,
         StopAttack = 5,
         ClientError = 6,
-        ClientAttacking = 7
+        ClientAttacking = 7,
+        RefreshClients = 8
     }
 }

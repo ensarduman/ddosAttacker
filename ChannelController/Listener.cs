@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace ChannelController
 {
-    public class Listener: ChannelControllerBase
+    public class Listener: ChannelHelper
     {
+        Pubnub pubnub;
+
+        public Listener(Pubnub pubnub)
+        {
+            this.pubnub = pubnub;
+        }
+
         public void AddListener(Func<MessageDTO, bool> func)
         {
             SubscribeCallbackExt listenerSubscribeCallack = new SubscribeCallbackExt(

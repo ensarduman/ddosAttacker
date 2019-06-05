@@ -7,17 +7,11 @@ using System.Threading.Tasks;
 
 namespace ChannelController
 {
-    public abstract class ChannelControllerBase
+    public abstract class ChannelHelper
     {
-        internal string channel = "Attacker";
-        internal Pubnub pubnub;
+        internal static string channel = "Attacker";
 
-        public ChannelControllerBase()
-        {
-            pubnub = InitializePubNubClient();
-        }
-
-        private Pubnub InitializePubNubClient()
+        public static Pubnub InitializePubNubClient()
         {
             PNConfiguration pnConfiguration = new PNConfiguration();
             pnConfiguration.PublishKey = "pub-c-64e4be28-420b-45ec-9485-a8f15009bb6e";
