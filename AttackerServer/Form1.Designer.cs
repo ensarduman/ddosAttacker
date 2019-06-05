@@ -32,7 +32,9 @@
             this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lastUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnRefreshClients = new System.Windows.Forms.Button();
+            this.txtUrl = new System.Windows.Forms.TextBox();
+            this.btnAttack = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lvClients
@@ -66,27 +68,48 @@
             this.lastUpdate.Text = "Last Update";
             this.lastUpdate.Width = 148;
             // 
-            // btnRefreshClients
+            // txtUrl
             // 
-            this.btnRefreshClients.Location = new System.Drawing.Point(12, 12);
-            this.btnRefreshClients.Name = "btnRefreshClients";
-            this.btnRefreshClients.Size = new System.Drawing.Size(75, 23);
-            this.btnRefreshClients.TabIndex = 1;
-            this.btnRefreshClients.Text = "Refresh Clients";
-            this.btnRefreshClients.UseVisualStyleBackColor = true;
-            this.btnRefreshClients.Click += new System.EventHandler(this.BtnRefreshClients_Click);
+            this.txtUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUrl.Location = new System.Drawing.Point(12, 12);
+            this.txtUrl.Name = "txtUrl";
+            this.txtUrl.Size = new System.Drawing.Size(509, 23);
+            this.txtUrl.TabIndex = 1;
+            // 
+            // btnAttack
+            // 
+            this.btnAttack.Location = new System.Drawing.Point(527, 12);
+            this.btnAttack.Name = "btnAttack";
+            this.btnAttack.Size = new System.Drawing.Size(111, 23);
+            this.btnAttack.TabIndex = 2;
+            this.btnAttack.Text = "ATTACK";
+            this.btnAttack.UseVisualStyleBackColor = true;
+            this.btnAttack.Click += new System.EventHandler(this.BtnAttack_Click);
+            // 
+            // btnStop
+            // 
+            this.btnStop.Location = new System.Drawing.Point(644, 12);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(111, 23);
+            this.btnStop.TabIndex = 3;
+            this.btnStop.Text = "STOP";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.BtnStop_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(767, 264);
-            this.Controls.Add(this.btnRefreshClients);
+            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.btnAttack);
+            this.Controls.Add(this.txtUrl);
             this.Controls.Add(this.lvClients);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "ddosAttacker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -96,7 +119,9 @@
         private System.Windows.Forms.ColumnHeader id;
         private System.Windows.Forms.ColumnHeader status;
         private System.Windows.Forms.ColumnHeader lastUpdate;
-        private System.Windows.Forms.Button btnRefreshClients;
+        private System.Windows.Forms.TextBox txtUrl;
+        private System.Windows.Forms.Button btnAttack;
+        private System.Windows.Forms.Button btnStop;
     }
 }
 

