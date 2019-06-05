@@ -141,42 +141,51 @@ namespace AttackerServer
         /// <param name="messageDTO"></param>
         private void ReceiveMessage(MessageDTO messageDTO)
         {
+            /*
+             Eğer server tarafından karşılanan bir mesaj ise bu değer true yapılır
+             */
+            bool isHandled = false;
 
-            ClientStatusType clientStatusType;
+            ClientStatusType clientStatusType = ClientStatusType.Normal;
             switch (messageDTO.MessageType)
             {
                 case MessageType.TextToServers:
                     clientStatusType = ClientStatusType.Message;
+                    isHandled = true;
                     break;
                 case MessageType.ClientStatus:
                     clientStatusType = ClientStatusType.Normal;
+                    isHandled = true;
                     break;
                 case MessageType.ClientError:
                     clientStatusType = ClientStatusType.Error;
+                    isHandled = true;
                     break;
                 case MessageType.ClientAttacking:
                     clientStatusType = ClientStatusType.Attacking;
+                    isHandled = true;
                     break;
                 default:
-                    clientStatusType = ClientStatusType.Normal;
                     break;
             }
 
-            var client = Clients.Where(p => p.Id == messageDTO.SenderId).FirstOrDefault();
-            if (client == null)
+            if (isHandled)
             {
-                client = new ClientData(messageDTO.SenderId, messageDTO.Data, clientStatusType, DateTime.Now);
-                Clients.Add(client);
+                var client = Clients.Where(p => p.Id == messageDTO.SenderId).FirstOrDefault();
+                if (client == null)
+                {
+                    client = new ClientData(messageDTO.SenderId, messageDTO.Data, clientStatusType, DateTime.Now);
+                    Clients.Add(client);
+                }
+                else
+                {
+                    client.StatusText = messageDTO.Data;
+
+                    client.ClientStatusType = clientStatusType;
+
+                    client.LastUpdate = DateTime.Now;
+                }
             }
-            else
-            {
-                client.StatusText = messageDTO.Data;
-
-                client.ClientStatusType = clientStatusType;
-
-                client.LastUpdate = DateTime.Now;
-            }
-
         }
 
         /// <summary>

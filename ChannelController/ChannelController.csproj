@@ -53,7 +53,6 @@
     <Compile Include="ChannelControllerBase.cs" />
     <Compile Include="Listener.cs" />
     <Compile Include="Publisher.cs" />
-    <Compile Include="Sample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
