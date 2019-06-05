@@ -135,6 +135,10 @@ namespace AttackerServer
             }
         }
 
+        /// <summary>
+        /// Alınan mesajları yorumlar ve gerekli aksiyonları başlatır
+        /// </summary>
+        /// <param name="messageDTO"></param>
         private void ReceiveMessage(MessageDTO messageDTO)
         {
 
@@ -175,6 +179,12 @@ namespace AttackerServer
 
         }
 
+        /// <summary>
+        /// Mesaj yayınlar
+        /// </summary>
+        /// <param name="messageType"></param>
+        /// <param name="data"></param>
+        /// <param name="afterSuccessFunction"></param>
         private void PublishMessage(MessageType messageType, string data, Func<bool> afterSuccessFunction)
         {
             Publisher publisher = new Publisher(pubnub);

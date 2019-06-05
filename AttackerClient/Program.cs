@@ -37,7 +37,6 @@ namespace AttackerClient
                 return true;
             });
 
-
             //Sunucuya durum bilgisi gönderilmesi için bir timer yaratılıyor
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Elapsed += Timer_Elapsed; ;
