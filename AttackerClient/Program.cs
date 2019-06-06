@@ -13,6 +13,7 @@ namespace AttackerClient
 {
     class Program
     {
+        Thread trdAttack = null;
         static string SenderId;
         static ClientStatusType Status;
         static string Data;
@@ -38,10 +39,10 @@ namespace AttackerClient
             });
 
             //Sunucuya durum bilgisi gönderilmesi için bir timer yaratılıyor
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Elapsed += Timer_Elapsed; ;
-            timer.Interval = SendStatusMessageInterval;
-            timer.Start();
+            System.Timers.Timer tmrStatusMessage = new System.Timers.Timer();
+            tmrStatusMessage.Elapsed += Timer_Elapsed; ;
+            tmrStatusMessage.Interval = SendStatusMessageInterval;
+            tmrStatusMessage.Start();
 
             Console.ReadLine();
         }
@@ -50,5 +51,17 @@ namespace AttackerClient
         {
             ClientController.PublishStatusMessage(pubnub, SenderId, ref Status, ref Data);
         }
+
+        private void StartAttack()
+        {
+            if(trdAttack == null)
+            {
+
+            }
+
+            trdAttack.Start();
+        }
+
+
     }
 }

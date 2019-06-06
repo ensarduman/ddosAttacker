@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PubnubApi;
+using System.Threading;
 
 namespace AttackerClient
 {
     class ClientController
     {
+        static Thread trdAttack = null;
+
         /// <summary>
         /// Mesaj yayınlar
         /// </summary>
@@ -109,6 +112,26 @@ namespace AttackerClient
         {
             Status = ClientStatusType.Attacking;
             Data = url;
+
+            if (trdAttack == null)
+            {
+                trdAttack = new Thread(() =>
+                {
+                    int i = 0;
+                    while (true)
+                    {
+                        i++;
+
+                        if (i % 10000 == 0)
+                        {
+                            WriteMessage("Attacking: " + i.ToString());
+                            WriteMessage("Url: " + url);
+                        }
+                    }
+                });
+                trdAttack.Start();
+            }
+
             WriteMessage("Attacking started to " + url);
         }
 
@@ -120,6 +143,13 @@ namespace AttackerClient
         {
             Status = ClientStatusType.Normal;
             Data = String.Empty;
+
+            if(trdAttack != null)
+            {
+                trdAttack.Abort();
+                trdAttack = null;
+            }
+
             WriteMessage("Attacking stopped");
         }
 
