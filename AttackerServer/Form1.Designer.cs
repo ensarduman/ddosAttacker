@@ -113,7 +113,10 @@
             this.Controls.Add(this.btnAttack);
             this.Controls.Add(this.txtUrl);
             this.Controls.Add(this.lvClients);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.Text = "ddosAttacker";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
