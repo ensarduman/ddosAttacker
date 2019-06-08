@@ -55,19 +55,47 @@ namespace AttackerServer
         /// <param name="e"></param>
         private void ReloadScreen(object sender, EventArgs e)
         {
-            lvClients.Items.Clear();
+            //Ekrandan kaldırılacak item'lar
+            List<ListViewItem> removingListItems = new List<ListViewItem>();
 
+            //Ekrana halihazırda eklenmiş clientId'ler
+            List<string> alreadyAddedClientIds = new List<string>();
+
+            //Öncelikle ekrandakiler güncelleniyor veya kaldırılıyor
+            foreach (ListViewItem listItem in lvClients.Items)
+            {
+                var client = Clients.Where(p => p.Id == listItem.Text).FirstOrDefault();
+
+                //Eğer client yoksa veya timeout olduysa
+                if (client == null || DateMethods.IsTimedOut(client.LastUpdate, MaxRemovingSeconds))
+                {
+                    removingListItems.Add(listItem);
+
+                    //Client listesinden de kaldırılıyor
+                    if (client != null)
+                    {
+                        Clients.Remove(client);
+                    }
+                }
+                else
+                {
+                    alreadyAddedClientIds.Add(client.Id);
+                    SetListItem(listItem, client);
+                }
+            }
+
+            //Kaldırılacaklar ekrandan kaldırılıyor
+            removingListItems.ForEach(p => lvClients.Items.Remove(p));
 
             /*
+             * Ekranda var olmayan client'lar ekrana ekleniyor
+             * ve
             Eğer belli bir saniye süresince (MaxRemovingSeconds) client'dan bir bilgi gelmediyse 
             ekrandan ve listeden kaldırılır.
              */
-            this.Clients = Clients.Where(client =>
-            {
-                return !DateMethods.IsTimedOut(client.LastUpdate, MaxRemovingSeconds);
-            }).ToList();
+            var notAddedClients = Clients.Where(client => !alreadyAddedClientIds.Contains(client.Id)).ToList();
 
-            foreach (var client in this.Clients)
+            foreach (var client in notAddedClients)
             {
                 /*
                 Eğer belli bir saniye süresince (MaxRemovingSeconds) client'dan bir bilgi gelmediyse
@@ -76,62 +104,92 @@ namespace AttackerServer
 
                 var newRow = new ListViewItem();
 
-                newRow.Text = client.Id;
-
-                if (DateMethods.IsTimedOut(client.LastUpdate, MaxRespondingSeconds))
-                {
-                    newRow.SubItems.Add(new ListViewItem.ListViewSubItem()
-                    {
-                        Tag = "status",
-                        Text = "Not Responding"
-                    });
-
-                    client.ClientStatusType = ClientStatusType.NotResponding;
-                }
-                else
-                {
-                    newRow.SubItems.Add(new ListViewItem.ListViewSubItem()
-                    {
-                        Tag = "status",
-                        Text = client.StatusText
-                    });
-                }
-
-                newRow.SubItems.Add(new ListViewItem.ListViewSubItem()
-                {
-                    Tag = "lastUpdate",
-                    Text = client.LastUpdate.ToString()
-                });
-
-
-                //Client'ın durumuna göre satırın rengi belirleniyor
-                switch (client.ClientStatusType)
-                {
-                    case ClientStatusType.Normal:
-                        newRow.BackColor = lvClients.BackColor;
-                        newRow.ForeColor = lvClients.ForeColor;
-                        break;
-                    case ClientStatusType.Message:
-                        newRow.BackColor = Color.Yellow;
-                        newRow.ForeColor = lvClients.ForeColor;
-                        break;
-                    case ClientStatusType.Error:
-                        newRow.BackColor = Color.Red;
-                        newRow.ForeColor = Color.White;
-                        break;
-                    case ClientStatusType.NotResponding:
-                        newRow.BackColor = Color.Orange;
-                        newRow.ForeColor = lvClients.ForeColor;
-                        break;
-                    case ClientStatusType.Attacking:
-                        newRow.BackColor = Color.Green;
-                        newRow.ForeColor = Color.White;
-                        break;
-                    default:
-                        break;
-                }
+                SetListItem(newRow, client);
 
                 lvClients.Items.Add(newRow);
+            }
+        }
+
+        /// <summary>
+        /// ListItem'ı günceller
+        /// </summary>
+        /// <param name="listItem"></param>
+        /// <param name="client"></param>
+        private void SetListItem(ListViewItem listItem, ClientData client)
+        {
+            listItem.SubItems.Clear();
+
+            listItem.Text = client.Id;
+
+            bool isTimedOutForResponding = DateMethods.IsTimedOut(client.LastUpdate, MaxRespondingSeconds);
+
+            if(isTimedOutForResponding)
+            {
+                client.ClientStatusType = ClientStatusType.NotResponding;
+            }
+
+            listItem.SubItems.Add(new ListViewItem.ListViewSubItem()
+            {
+                Name = "status",
+                Tag = "status",
+                Text = client.ClientStatusType.ToString()
+            });
+
+
+
+            if (isTimedOutForResponding)
+            {
+                listItem.SubItems.Add(new ListViewItem.ListViewSubItem()
+                {
+                    Name = "message",
+                    Tag = "message",
+                    Text = "Not Responding"
+                });
+
+                client.ClientStatusType = ClientStatusType.NotResponding;
+            }
+            else
+            {
+                listItem.SubItems.Add(new ListViewItem.ListViewSubItem()
+                {
+                    Name = "message",
+                    Tag = "message",
+                    Text = client.StatusText
+                });
+            }
+
+            listItem.SubItems.Add(new ListViewItem.ListViewSubItem()
+            {
+                Name = "lastUpdate",
+                Tag = "lastUpdate",
+                Text = client.LastUpdate.ToString()
+            });
+
+            //Client'ın durumuna göre satırın rengi belirleniyor
+            switch (client.ClientStatusType)
+            {
+                case ClientStatusType.Normal:
+                    listItem.BackColor = lvClients.BackColor;
+                    listItem.ForeColor = lvClients.ForeColor;
+                    break;
+                case ClientStatusType.Message:
+                    listItem.BackColor = Color.Yellow;
+                    listItem.ForeColor = lvClients.ForeColor;
+                    break;
+                case ClientStatusType.Error:
+                    listItem.BackColor = Color.Red;
+                    listItem.ForeColor = Color.White;
+                    break;
+                case ClientStatusType.NotResponding:
+                    listItem.BackColor = Color.Orange;
+                    listItem.ForeColor = lvClients.ForeColor;
+                    break;
+                case ClientStatusType.Attacking:
+                    listItem.BackColor = Color.Green;
+                    listItem.ForeColor = Color.White;
+                    break;
+                default:
+                    break;
             }
         }
 

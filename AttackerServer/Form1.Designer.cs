@@ -31,6 +31,7 @@
             this.lvClients = new System.Windows.Forms.ListView();
             this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lastUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnAttack = new System.Windows.Forms.Button();
@@ -39,9 +40,11 @@
             // 
             // lvClients
             // 
+            this.lvClients.AllowColumnReorder = true;
             this.lvClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.id,
             this.status,
+            this.message,
             this.lastUpdate});
             this.lvClients.Location = new System.Drawing.Point(12, 41);
             this.lvClients.Name = "lvClients";
@@ -61,6 +64,11 @@
             this.status.Tag = "status";
             this.status.Text = "Status";
             this.status.Width = 205;
+            // 
+            // message
+            // 
+            this.message.Tag = "message";
+            this.message.Text = "Message";
             // 
             // lastUpdate
             // 
@@ -122,6 +130,7 @@
         private System.Windows.Forms.TextBox txtUrl;
         private System.Windows.Forms.Button btnAttack;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.ColumnHeader message;
     }
 }
 
